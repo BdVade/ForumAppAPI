@@ -2,11 +2,12 @@ from django.shortcuts import render
 
 from .models import Post, Comment
 from .serializers import *
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView,GenericAPIView
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND
+from rest_framework import status
 from django.http import JsonResponse
 
 
@@ -17,7 +18,7 @@ class PostList(ListAPIView):
     serializer_class = PostListSerializer
 
 
-class PostDetailView(APIView):
+class PostDetailView(GenericAPIView):
 
     def get_object(self, slug, id=id):
         try:
@@ -31,12 +32,12 @@ class PostDetailView(APIView):
         return Response(serializer.data)
 
 class CategoryList(ListAPIView):
-    """List all posts in a Category"""
+    """List all the Categories in the Forum"""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-class CategoryDetailView(APIView):
-
+class CategoryDetailView(GenericAPIView):
+    """Detail of a Category returns as response the name, description and posts """
     def get_object(self, slug, id=id):
         try:
             return Category.objects.get(slug=slug, id=id)
@@ -51,11 +52,12 @@ class CategoryDetailView(APIView):
 
 @api_view(['POST'])
 def post_create(request, ):
+    """End point to create post. Takes 'title', 'body', 'category' as parameter """
     serializer = PostCreateSerializer()
     if serializer.is_valid():
         serializer.save(author=request.user)
         return Response(serializer.data)
-
+    return serializer.errors,status.HTTP_400_BAD_REQUEST
 
 # class CommentCreateView(CreateAPIView):
 #     serializer_class = CommentSerializer
@@ -74,7 +76,7 @@ def comment_create(request, post, id):
 def reply_create(request, parent_id):
     """end point to create a reply to a comment. Accepts the email of the poster
     and the body of the comment returns a response of the submitted values.
-    Accepted keys are 'email' and 'body'"""
+    Accepted keys are 'email' and 'body'.path parameter *parent_id* is the id of the comment being replied to"""
     serializer = CommentCreateSerializer(data=request.data)
     replying = Comment.object.get(id=parent_id)
     if serializer.is_valid():
