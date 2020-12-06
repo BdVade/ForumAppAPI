@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     #3rd party apps
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders'
+    'corsheaders',
     # 'rest_framework.authentication',
     'rest_auth',
     'rest_auth.registration',
