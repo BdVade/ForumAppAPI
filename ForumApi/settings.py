@@ -26,7 +26,7 @@ SECRET_KEY = '@@nzr5c8xn&z7n=^n1@eu0zuep8pq51j#=@ua*6s)g5iw1f1vg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["sqiforum.herokuapp.com",]
 
 
 # Application definition
