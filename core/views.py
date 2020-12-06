@@ -47,7 +47,7 @@ class CategoryDetailView(GenericAPIView):
     def get(self, request, slug, id):
         queryset = self.get_object(slug=slug, id=id)
         serializer = CategoryDetailSerializer(queryset)
-        return Response(serializer.data)
+        return JsonResponse(serializer.data)
 
 
 @api_view(['POST'])

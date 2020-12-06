@@ -21,8 +21,8 @@ from rest_framework.documentation import include_docs_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/v1/rest-auth/', include('rest_auth.urls')),
-    path('api/v1/rest-auth/registration/', # new
+    path('api/v1/auth/', include('rest_auth.urls')),
+    path('api/v1/auth/registration/', # new
             include('rest_auth.registration.urls')),
     path('api/v1/users/', include('accs.urls')),
     path('api/v1/', include('core.urls')),
