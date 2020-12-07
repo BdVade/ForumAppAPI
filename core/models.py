@@ -54,8 +54,8 @@ class Comment(models.Model):
     body = models.TextField(max_length=1000)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
     created = models.DateTimeField(auto_now_add=True)
-    upvotes = models.ManyToManyField(User, related_name='user_upvotes',null=True, blank=True )
-    downvotes = models.ManyToManyField(User, related_name='user_downvotes', null=True, blank=True )
+    upvotes = models.ManyToManyField(UpVote, related_name='user_upvotes',null=True, blank=True )
+    downvotes = models.ManyToManyField(DownVote, related_name='user_downvotes', null=True, blank=True )
     replying = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', blank=True, null=True)
 
     class Meta:

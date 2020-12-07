@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import Post, Comment
+from .models import Post, Comment,UpVote,Category
 from .serializers import *
 from rest_framework.generics import ListAPIView, CreateAPIView,GenericAPIView
 from rest_framework.decorators import api_view
@@ -47,7 +47,7 @@ class CategoryDetailView(GenericAPIView):
     def get(self, request, slug, id):
         queryset = self.get_object(slug=slug, id=id)
         serializer = CategoryDetailSerializer(queryset)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
@@ -84,14 +84,107 @@ def reply_create(request, parent_id):
         return Response(serializer.data)
 
 
-# def comment_update(request, comment_id):
-#     try:
-#         comment = Comment.objects.get(id=comment_id)
-#     except Comment.DoesNotExist:
-#         raise HTTP_404_NOT_FOUND
-#     if request.user not in comment.upvotes.all():
-#         serializer = CommentSerializer(comment, data=request.data, partial=True)
-#         serializer.save()
-#     else:
-#         comment.upvotes.remove(request.user)
-#     return JsonResponse(serializer.data)
+def comment_upvote(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+    except Comment.DoesNotExist:
+        raise HTTP_404_NOT_FOUND
+    try:
+        com_upvote = UpVote.objects.get(user_upvotes=comment,voter=request.user)
+        comment.upvotes.remove(com_upvote)
+        comment.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'UpVote removed successfully',
+            'upvote_count': comment.upvotes.count()
+        })
+    except UpVote.DoesNotExist:
+        new_upvote = UpVote.objects.create(voter=request.user,)
+        comment.upvotes.add(new_upvote)
+        comment.save()
+        new_upvote.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'UpVote added successfully',
+            'upvote_count': comment.upvotes.count()
+        })
+
+def comment_downvote(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+    except Comment.DoesNotExist:
+        raise HTTP_404_NOT_FOUND
+    try:
+        com_downvote = DownVote.objects.get(user_downvotes=comment,voter=request.user)
+        comment.downvotes.remove(com_downvote)
+        comment.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'DownVote removed successfully',
+            'downvote_count': comment.downvotes.count()
+        })
+    except DownVote.DoesNotExist:
+        new_downvote = DownVote.objects.create(voter=request.user,)
+        comment.downvotes.add(new_downvote)
+        comment.save()
+        new_downvote.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'DownVote added successfully',
+            'downvote_count': comment.downvotes.count()
+        })
+
+
+def post_upvote(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        raise HTTP_404_NOT_FOUND
+    try:
+        com_upvote = UpVote.objects.get(upvote_posts=post,voter=request.user)
+        post.upvotes.remove(com_upvote)
+        post.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'UpVote removed successfully',
+            'upvote_count': post.upvotes.count()
+        })
+    except UpVote.DoesNotExist:
+        new_upvote = UpVote.objects.create(voter=request.user,)
+        post.upvotes.add(new_upvote)
+        post.save()
+        new_upvote.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'UpVote added successfully',
+            'upvote_count': post.upvotes.count()
+        })
+
+
+
+
+def post_downvote(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        raise HTTP_404_NOT_FOUND
+    try:
+        post_downvote = DownVote.objects.get(downvote_posts=post,voter=request.user)
+        post.downvotes.remove(post_downvote)
+        post.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'DownVote removed successfully',
+            'downvote_count': post.downvotes.count()
+        })
+    except DownVote.DoesNotExist:
+        new_downvote = DownVote.objects.create(voter=request.user,)
+        post.downvotes.add(new_downvote)
+        post.save()
+        new_downvote.save()
+        return JsonResponse({
+            'status': True,
+            'details': 'DownVote added successfully',
+            'downvote_count': post.downvotes.count()
+        })
+

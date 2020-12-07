@@ -92,3 +92,5 @@ class PostDetailSerializer(serializers.ModelSerializer):
         fields = ['title','body','author','created','post_comments','id','category',
                   'upvotes','downvotes']
         read_only = ['created', 'id']
+
+
