@@ -53,10 +53,10 @@ class CategoryDetailView(GenericAPIView):
 @api_view(['POST'])
 def post_create(request, ):
     """End point to create post. Takes 'title', 'body', 'category' as parameter """
-    serializer = PostCreateSerializer()
+    serializer = PostCreateSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(author=request.user)
-        return Response(serializer.data)
+        return JsonResponse(serializer.data)
     return serializer.errors,status.HTTP_400_BAD_REQUEST
 
 # class CommentCreateView(CreateAPIView):
