@@ -7,8 +7,8 @@ from accs.models import User
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_length=20)
-    slug = models.SlugField()
+    name = models.CharField(max_length=20,unique=True)
+    slug = models.SlugField(unique=True)
     description = models.TextField(max_length=300)
 
     def __str__(self):

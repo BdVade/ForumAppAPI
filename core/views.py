@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
-from .models import Post, Comment,UpVote,Category
+from .models import Post, Comment, UpVote, Category
 from .serializers import *
-from rest_framework.generics import ListAPIView, CreateAPIView,GenericAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, GenericAPIView
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -31,33 +31,43 @@ class PostDetailView(GenericAPIView):
         serializer = PostDetailSerializer(queryset)
         return Response(serializer.data)
 
+
 class CategoryList(ListAPIView):
     """List all the Categories in the Forum"""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+
 class CategoryDetailView(GenericAPIView):
     """Detail of a Category returns as response the name, description and posts """
-    def get_object(self, slug, id=id):
+
+    def get_object(self, slug):
         try:
-            return Category.objects.get(slug=slug, id=id)
+            return Category.objects.get(slug=slug,)
         except Category.DoesNotExist:
             raise HTTP_404_NOT_FOUND
 
-    def get(self, request, slug, id):
-        queryset = self.get_object(slug=slug, id=id)
+    def get(self, request, slug,):
+        queryset = self.get_object(slug=slug)
         serializer = CategoryDetailSerializer(queryset)
         return Response(serializer.data)
 
 
 @api_view(['POST'])
 def post_create(request, ):
-    """End point to create post. Takes 'title', 'body', 'category' as parameter """
+    """End point to create post. Takes 'title', 'body', 'category' as parameter.Value of cstegory
+     shoild be the name of the category"""
     serializer = PostCreateSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(author=request.user)
-        return JsonResponse(serializer.data)
-    return serializer.errors,status.HTTP_400_BAD_REQUEST
+        cd = serializer.validated_data
+        print(cd)
+        category = cd["category"]
+        # print(category)
+        category = Category.objects.get(name=category)
+        serializer.save(author=request.user,category=category)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
 
 # class CommentCreateView(CreateAPIView):
 #     serializer_class = CommentSerializer
@@ -71,6 +81,7 @@ def comment_create(request, post, id):
     if serializer.is_valid():
         serializer.save(post=parent)
         return Response(serializer.data)
+
 
 @api_view(['POST'])
 def reply_create(request, parent_id):
@@ -90,7 +101,7 @@ def comment_upvote(request, comment_id):
     except Comment.DoesNotExist:
         raise HTTP_404_NOT_FOUND
     try:
-        com_upvote = UpVote.objects.get(user_upvotes=comment,voter=request.user)
+        com_upvote = UpVote.objects.get(user_upvotes=comment, voter=request.user)
         comment.upvotes.remove(com_upvote)
         comment.save()
         return JsonResponse({
@@ -99,7 +110,7 @@ def comment_upvote(request, comment_id):
             'upvote_count': comment.upvotes.count()
         })
     except UpVote.DoesNotExist:
-        new_upvote = UpVote.objects.create(voter=request.user,)
+        new_upvote = UpVote.objects.create(voter=request.user, )
         comment.upvotes.add(new_upvote)
         comment.save()
         new_upvote.save()
@@ -109,13 +120,14 @@ def comment_upvote(request, comment_id):
             'upvote_count': comment.upvotes.count()
         })
 
+
 def comment_downvote(request, comment_id):
     try:
         comment = Comment.objects.get(id=comment_id)
     except Comment.DoesNotExist:
         raise HTTP_404_NOT_FOUND
     try:
-        com_downvote = DownVote.objects.get(user_downvotes=comment,voter=request.user)
+        com_downvote = DownVote.objects.get(user_downvotes=comment, voter=request.user)
         comment.downvotes.remove(com_downvote)
         comment.save()
         return JsonResponse({
@@ -124,7 +136,7 @@ def comment_downvote(request, comment_id):
             'downvote_count': comment.downvotes.count()
         })
     except DownVote.DoesNotExist:
-        new_downvote = DownVote.objects.create(voter=request.user,)
+        new_downvote = DownVote.objects.create(voter=request.user, )
         comment.downvotes.add(new_downvote)
         comment.save()
         new_downvote.save()
@@ -141,7 +153,7 @@ def post_upvote(request, post_id):
     except Post.DoesNotExist:
         raise HTTP_404_NOT_FOUND
     try:
-        com_upvote = UpVote.objects.get(upvote_posts=post,voter=request.user)
+        com_upvote = UpVote.objects.get(upvote_posts=post, voter=request.user)
         post.upvotes.remove(com_upvote)
         post.save()
         return JsonResponse({
@@ -150,7 +162,7 @@ def post_upvote(request, post_id):
             'upvote_count': post.upvotes.count()
         })
     except UpVote.DoesNotExist:
-        new_upvote = UpVote.objects.create(voter=request.user,)
+        new_upvote = UpVote.objects.create(voter=request.user, )
         post.upvotes.add(new_upvote)
         post.save()
         new_upvote.save()
@@ -161,15 +173,13 @@ def post_upvote(request, post_id):
         })
 
 
-
-
 def post_downvote(request, post_id):
     try:
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         raise HTTP_404_NOT_FOUND
     try:
-        post_downvote = DownVote.objects.get(downvote_posts=post,voter=request.user)
+        post_downvote = DownVote.objects.get(downvote_posts=post, voter=request.user)
         post.downvotes.remove(post_downvote)
         post.save()
         return JsonResponse({
@@ -178,7 +188,7 @@ def post_downvote(request, post_id):
             'downvote_count': post.downvotes.count()
         })
     except DownVote.DoesNotExist:
-        new_downvote = DownVote.objects.create(voter=request.user,)
+        new_downvote = DownVote.objects.create(voter=request.user, )
         post.downvotes.add(new_downvote)
         post.save()
         new_downvote.save()
@@ -187,4 +197,3 @@ def post_downvote(request, post_id):
             'details': 'DownVote added successfully',
             'downvote_count': post.downvotes.count()
         })
-

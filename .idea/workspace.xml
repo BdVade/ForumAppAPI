@@ -19,7 +19,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -35,13 +35,13 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="298" y="0" key="SettingsEditor" timestamp="1607213246410">
+    <state x="262" y="0" key="SettingsEditor" timestamp="1607372285440">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="298" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1607213246410" />
-    <state x="502" y="190" key="com.intellij.ide.util.TipDialog" timestamp="1607266260018">
+    <state x="262" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1607372285440" />
+    <state x="502" y="190" key="com.intellij.ide.util.TipDialog" timestamp="1607433957853">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="502" y="190" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1607266260018" />
+    <state x="502" y="190" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1607433957853" />
   </component>
 </project>

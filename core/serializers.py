@@ -23,7 +23,7 @@ class UpVoteSerializer(serializers.ModelSerializer):
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    # category = CategorySerializer()
     class Meta:
         model = Post
         fields = ['title', 'body', 'category']
@@ -32,18 +32,18 @@ class PostCreateSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username',]
+        fields = ['username','email',"id"]
 
 
 class PostListSerializer(serializers.ModelSerializer):
-    author = UserDetailSerializer()
+    # upvotes = serializers.
     category = CategorySerializer()
     class Meta:
         model = Post
-        fields = ['title', 'author','id','slug','category']
+        fields = ['title', 'author','id','slug','category','created']
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
-    category_posts = PostListSerializer()
+    category_posts = PostListSerializer(many=True)
     class Meta:
         model = Category
         fields = ['name', 'description', 'category_posts']
@@ -85,6 +85,7 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 class PostDetailSerializer(serializers.ModelSerializer):
     post_comments = CommentSerializer(many=True)
     category = CategorySerializer()
+    author = UserDetailSerializer()
     upvotes = UpVoteSerializer(many=True, read_only=True)
     downvotes = DownVoteSerializer(many=True, read_only=True)
     class Meta:
