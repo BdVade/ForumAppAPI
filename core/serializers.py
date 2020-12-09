@@ -38,9 +38,12 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class PostListSerializer(serializers.ModelSerializer):
     # upvotes = serializers.
     category = CategorySerializer()
+    author = UserDetailSerializer()
+    upvotes_count = serializers.ReadOnlyField()
+    comments_count = serializers.ReadOnlyField()
     class Meta:
         model = Post
-        fields = ['title', 'author','id','slug','category','created']
+        fields = ['title', 'author','id','slug','category','created','upvotes_count',"comments_count"]
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
     category_posts = PostListSerializer(many=True)

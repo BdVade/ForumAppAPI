@@ -39,13 +39,14 @@ class CategoryList(ListAPIView):
 
 
 class CategoryDetailView(GenericAPIView):
-    """Detail of a Category returns as response the name, description and posts """
+    """Detail of a Category returns as response the name, description and posts takes the slug of the category as
+    URL parameter"""
 
     def get_object(self, slug):
         try:
             return Category.objects.get(slug=slug,)
         except Category.DoesNotExist:
-            raise HTTP_404_NOT_FOUND
+            return Response(status.HTTP_404_NOT_FOUND)
 
     def get(self, request, slug,):
         queryset = self.get_object(slug=slug)
@@ -53,10 +54,10 @@ class CategoryDetailView(GenericAPIView):
         return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['POST',])
 def post_create(request, ):
-    """End point to create post. Takes 'title', 'body', 'category' as parameter.Value of cstegory
-     shoild be the name of the category"""
+    """End point to create post. Takes 'title', 'body', 'category' as parameter.Value of category
+     should be the name of the category"""
     serializer = PostCreateSerializer(data=request.data)
     if serializer.is_valid():
         cd = serializer.validated_data

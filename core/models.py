@@ -45,6 +45,15 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def upvotes_count(self):
+        return self.upvotes.count
+
+    @property
+    def comments_count(self):
+        return self.post_comments.count
+
+
     class Meta:
         ordering = ('-created',)
 
