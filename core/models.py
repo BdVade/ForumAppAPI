@@ -18,6 +18,10 @@ class Category(models.Model):
         self.slug = slugify(self.name, allow_unicode=True)
         super().save(*args, **kwargs)
 
+    @property
+    def post_count(self,):
+        self.category_posts.count
+
 class UpVote(models.Model):
     voter = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)

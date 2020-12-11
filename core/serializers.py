@@ -3,9 +3,10 @@ from .models import Post,Comment,Category,UpVote,DownVote
 from accs.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
+    post_count = serializers.ReadOnlyField()
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = ["id","name","slug","description","post_count"]
         read_only_fields = ["__all__"]
 
 
