@@ -20,7 +20,7 @@ class Category(models.Model):
 
     @property
     def post_count(self,):
-        self.category_posts.count
+        return self.category_posts.count
 
 class UpVote(models.Model):
     voter = models.ForeignKey(User, on_delete=models.CASCADE)
