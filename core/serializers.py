@@ -69,10 +69,11 @@ class CommentSerializer(serializers.ModelSerializer):
     upvotes = UpVoteSerializer(many=True, read_only=True)
     downvotes = DownVoteSerializer(many=True, read_only=True)
     replies = ReplySerializer(many=True)
+    commenter = UserDetailSerializer()
 
     class Meta:
         model = Comment
-        fields = ['id','email', 'body', 'created','upvotes','downvotes', 'replies']
+        fields = ['id','email', 'body', 'created','upvotes','downvotes', 'replies','commenter']
         read_only_fields = ['created','id']
 
 class CommentCreateSerializer(serializers.ModelSerializer):

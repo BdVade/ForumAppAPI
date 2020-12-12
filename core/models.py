@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from shortuuidfield import ShortUUIDField
 from accs.models import User
+# from .serializers import UserDetailSerializer
 
 
 # Create your models here.
@@ -61,10 +62,11 @@ class Post(models.Model):
     class Meta:
         ordering = ('-created',)
 
-
+# queryset= User.objects.get(id=1)
 class Comment(models.Model):
     email = models.EmailField(blank=True)
     body = models.TextField(max_length=1000)
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments',)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
     created = models.DateTimeField(auto_now_add=True)
     upvotes = models.ManyToManyField(UpVote, related_name='user_upvotes',null=True, blank=True )

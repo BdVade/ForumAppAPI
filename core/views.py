@@ -82,7 +82,7 @@ def comment_create(request, post, id):
     serializer = CommentCreateSerializer(data=request.data)
     parent = Post.objects.get(slug=post, id=id)
     if serializer.is_valid():
-        serializer.save(post=parent)
+        serializer.save(post=parent,commenter=request.user)
         return Response(serializer.data)
 
 
