@@ -3,7 +3,8 @@ from django.shortcuts import render
 from .models import Post, Comment, UpVote, Category
 from .serializers import *
 from rest_framework.generics import ListAPIView, CreateAPIView, GenericAPIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND
@@ -53,8 +54,8 @@ class CategoryDetailView(GenericAPIView):
         serializer = CategoryDetailSerializer(queryset)
         return Response(serializer.data)
 
-
 @api_view(['POST',])
+@permission_classes([IsAuthenticated])
 def post_create(request, ):
     """End point to create post. Takes 'title', 'body', 'category' as parameter.Value of category
      should be the name of the category"""
@@ -73,6 +74,7 @@ def post_create(request, ):
 # class CommentCreateView(CreateAPIView):
 #     serializer_class = CommentSerializer
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def comment_create(request, post, id):
     """end point to create a comment to a post. Accepts the email of the poster
         and the body of the comment returns a response of the submitted values.
@@ -84,7 +86,8 @@ def comment_create(request, post, id):
         return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def reply_create(request, parent_id):
     """end point to create a reply to a comment. Accepts the email of the poster
     and the body of the comment returns a response of the submitted values.
@@ -95,7 +98,8 @@ def reply_create(request, parent_id):
         serializer.save(replying=replying)
         return Response(serializer.data)
 
-
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def comment_upvote(request, comment_id):
     try:
         comment = Comment.objects.get(id=comment_id)
@@ -121,7 +125,8 @@ def comment_upvote(request, comment_id):
             'upvote_count': comment.upvotes.count()
         })
 
-
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def comment_downvote(request, comment_id):
     try:
         comment = Comment.objects.get(id=comment_id)
@@ -147,7 +152,8 @@ def comment_downvote(request, comment_id):
             'downvote_count': comment.downvotes.count()
         })
 
-
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def post_upvote(request, post_id):
     try:
         post = Post.objects.get(id=post_id)
@@ -173,7 +179,8 @@ def post_upvote(request, post_id):
             'upvote_count': post.upvotes.count()
         })
 
-
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def post_downvote(request, post_id):
     try:
         post = Post.objects.get(id=post_id)

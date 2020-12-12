@@ -14,13 +14,13 @@ def user_detail(request, id):
     return JsonResponse(serializer.data)
 
 
-@api_view(['PUT'])
-def profile_edit(request,id):
-    try:
-        user = User.objects.get(id=id)
-    except User.DoesNotExist:
-        raise HTTP_404_NOT_FOUND
-    serializer = ProfileEditSerializer(user,data=request.data,)
+# @api_view(['PUT'])
+# def profile_edit(request,id):
+#     try:
+#         user = User.objects.get(id=id)
+#     except User.DoesNotExist:
+#         raise HTTP_404_NOT_FOUND
+#     serializer = ProfileEditSerializer(user,data=request.data,)
 
 
 class UserList(ListAPIView):
