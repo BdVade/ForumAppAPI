@@ -95,7 +95,7 @@ def reply_create(request, parent_id):
     serializer = CommentCreateSerializer(data=request.data)
     replying = Comment.objects.get(id=parent_id)
     if serializer.is_valid():
-        serializer.save(replying=replying)
+        serializer.save(replying=replying,commenter=request.user)
         return Response(serializer.data)
 
 @api_view(["POST"])
