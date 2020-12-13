@@ -93,7 +93,7 @@ def reply_create(request, parent_id):
     and the body of the comment returns a response of the submitted values.
     Accepted keys are 'email' and 'body'.path parameter *parent_id* is the id of the comment being replied to"""
     serializer = CommentCreateSerializer(data=request.data)
-    replying = Comment.object.get(id=parent_id)
+    replying = Comment.objects.get(id=parent_id)
     if serializer.is_valid():
         serializer.save(replying=replying)
         return Response(serializer.data)
