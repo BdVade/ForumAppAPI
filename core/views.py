@@ -94,8 +94,9 @@ def reply_create(request, parent_id):
     Accepted keys are 'email' and 'body'.path parameter *parent_id* is the id of the comment being replied to"""
     serializer = CommentCreateSerializer(data=request.data)
     replying = Comment.objects.get(id=parent_id)
+    post = replying.post
     if serializer.is_valid():
-        serializer.save(replying=replying,commenter=request.user)
+        serializer.save(replying=replying,commenter=request.user,post=post)
         return Response(serializer.data)
 
 @api_view(["POST"])
