@@ -86,16 +86,16 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 #         mo
 
 
-
+queryset=Comment.objects.filter(replying__isnull=True)
 class PostDetailSerializer(serializers.ModelSerializer):
-    post_comments = CommentSerializer(many=True)
+    non_reply_comments = CommentSerializer(many=True,)
     category = CategorySerializer()
     author = UserDetailSerializer()
     upvotes = UpVoteSerializer(many=True, read_only=True)
     downvotes = DownVoteSerializer(many=True, read_only=True)
     class Meta:
         model = Post
-        fields = ['title','body','author','created','post_comments','id','category',
+        fields = ['title','body','author','created','non_reply_comments','id','category',
                   'upvotes','downvotes']
         read_only = ['created', 'id']
 

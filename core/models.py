@@ -56,7 +56,10 @@ class Post(models.Model):
 
     @property
     def comments_count(self):
-        return self.post_comments.count
+        return self.post_comments.filter(replying__isnull=True).count
+
+    def non_reply_comments(self):
+        return self.post_comments.filter(replying__isnull=True)
 
 
     class Meta:
